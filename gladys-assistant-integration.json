@@ -1,0 +1,1384 @@
+{
+  "manifest_version": 1,
+  "type": "communication",
+  "name": "Pushbullet",
+  "description": {
+    "en": "Gladys notifications on your phones and computers through Pushbullet, with scenes and widgets.",
+    "fr": "Notifications de Gladys sur vos téléphones et ordinateurs via Pushbullet, avec scènes et widgets.",
+    "de": "Gladys-Benachrichtigungen auf Handy und Computer über Pushbullet, mit Szenen und Widgets.",
+    "es": "Notificaciones de Gladys en sus móviles y ordenadores con Pushbullet, con escenas y widgets."
+  },
+  "version": "0.1.0",
+  "docker_image": "ghcr.io/william-de71/gladys-pushbullet:0.1.0",
+  "gladys_version": ">=5.1.0",
+  "categories": ["notifications"],
+  "transports": ["cloud"],
+  "cover_image": "https://raw.githubusercontent.com/William-De71/gladys-pushbullet/main/cover.jpg",
+  "messaging": {
+    "receive": false
+  },
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Pushbullet account",
+        "fr": "Compte Pushbullet",
+        "de": "Pushbullet-Konto",
+        "es": "Cuenta de Pushbullet"
+      },
+      "description": {
+        "en": "Install Pushbullet on your phones and computers, then open the account settings of pushbullet.com below, click \"Create Access Token\" and copy the token here. This token gives full access to the account: the integration only sends pushes and texts, reads the pushes received and adds a \"Gladys\" device. Each user then enters the e-mail of their Pushbullet account in the \"My account\" block below.",
+        "fr": "Installez Pushbullet sur vos téléphones et ordinateurs, ouvrez ci-dessous les réglages du compte sur pushbullet.com, cliquez sur « Create Access Token » et recopiez le jeton ici. Ce jeton donne un accès complet au compte : l'intégration se contente d'envoyer des pushes et des SMS, de lire les pushes reçus et d'ajouter un appareil « Gladys ». Chaque utilisateur saisit ensuite l'e-mail de son compte Pushbullet dans le bloc « Mon compte » plus bas.",
+        "de": "Installieren Sie Pushbullet auf Ihren Telefonen und Computern, öffnen Sie unten die Kontoeinstellungen auf pushbullet.com, klicken Sie auf „Create Access Token“ und kopieren Sie das Token hierher. Dieses Token gewährt vollen Zugriff auf das Konto: Die Integration sendet nur Pushes und SMS, liest die empfangenen Pushes und fügt ein Gerät „Gladys“ hinzu. Jeder Benutzer gibt anschließend die E-Mail seines Pushbullet-Kontos im Block „Mein Konto“ weiter unten ein.",
+        "es": "Instale Pushbullet en sus teléfonos y ordenadores, abra abajo los ajustes de la cuenta en pushbullet.com, pulse «Create Access Token» y copie el token aquí. Este token da acceso completo a la cuenta: la integración solo envía pushes y SMS, lee los pushes recibidos y añade un dispositivo «Gladys». Después, cada usuario introduce el correo de su cuenta de Pushbullet en el bloque «Mi cuenta» de más abajo."
+      },
+      "links": [
+        {
+          "url": "https://www.pushbullet.com/#settings/account",
+          "label": {
+            "en": "Account settings (access token)",
+            "fr": "Réglages du compte (jeton d'accès)",
+            "de": "Kontoeinstellungen (Zugriffstoken)",
+            "es": "Ajustes de la cuenta (token de acceso)"
+          }
+        },
+        {
+          "url": "https://www.pushbullet.com/apps",
+          "label": {
+            "en": "Pushbullet apps",
+            "fr": "Applications Pushbullet",
+            "de": "Pushbullet-Apps",
+            "es": "Aplicaciones de Pushbullet"
+          }
+        }
+      ]
+    },
+    {
+      "key": "access_token",
+      "type": "secret",
+      "label": {
+        "en": "Access token",
+        "fr": "Jeton d'accès",
+        "de": "Zugriffstoken",
+        "es": "Token de acceso"
+      },
+      "description": {
+        "en": "Starts with \"o.\". Stored encrypted and never shown again.",
+        "fr": "Commence par « o. ». Stocké chiffré et plus jamais affiché.",
+        "de": "Beginnt mit „o.“. Wird verschlüsselt gespeichert und nie wieder angezeigt.",
+        "es": "Empieza por «o.». Se guarda cifrado y no se vuelve a mostrar."
+      },
+      "placeholder": {
+        "en": "o.xxxxxxxxxxxxxxxx",
+        "fr": "o.xxxxxxxxxxxxxxxx",
+        "de": "o.xxxxxxxxxxxxxxxx",
+        "es": "o.xxxxxxxxxxxxxxxx"
+      },
+      "required": true
+    },
+    {
+      "key": "title",
+      "type": "string",
+      "label": {
+        "en": "Title of the notifications",
+        "fr": "Titre des notifications",
+        "de": "Titel der Benachrichtigungen",
+        "es": "Título de las notificaciones"
+      },
+      "description": {
+        "en": "Shown above the text of every message of Gladys.",
+        "fr": "Affiché au-dessus du texte de chaque message de Gladys.",
+        "de": "Wird über dem Text jeder Nachricht von Gladys angezeigt.",
+        "es": "Se muestra encima del texto de cada mensaje de Gladys."
+      },
+      "default": "Gladys"
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "label": {
+        "en": "Language of the test push",
+        "fr": "Langue du push de test",
+        "de": "Sprache des Test-Pushs",
+        "es": "Idioma del push de prueba"
+      },
+      "description": {
+        "en": "The \"Send a test push\" button writes in this language (Gladys does not give the language of the user to a button).",
+        "fr": "Le bouton « Envoyer un push de test » écrit dans cette langue (Gladys ne transmet pas la langue de l'utilisateur à un bouton).",
+        "de": "Die Schaltfläche „Test-Push senden“ schreibt in dieser Sprache (Gladys übermittelt einer Schaltfläche nicht die Sprache des Benutzers).",
+        "es": "El botón «Enviar un push de prueba» escribe en este idioma (Gladys no transmite el idioma del usuario a un botón)."
+      },
+      "options": [
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "Anglais",
+            "de": "Englisch",
+            "es": "Inglés"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "French",
+            "fr": "Français",
+            "de": "Französisch",
+            "es": "Francés"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "German",
+            "fr": "Allemand",
+            "de": "Deutsch",
+            "es": "Alemán"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Spanish",
+            "fr": "Espagnol",
+            "de": "Spanisch",
+            "es": "Español"
+          }
+        }
+      ],
+      "default": "en"
+    },
+    {
+      "key": "reception_intro",
+      "type": "section",
+      "label": {
+        "en": "\"Gladys\" device and reception",
+        "fr": "Appareil « Gladys » et réception",
+        "de": "Gerät „Gladys“ und Empfang",
+        "es": "Dispositivo «Gladys» y recepción"
+      },
+      "description": {
+        "en": "The integration listens to the account in real time. A push sent to the \"Gladys\" device (from the share menu of your phone, for example) or to all your devices fires the \"Push received\" scene trigger. With notification mirroring on in the Pushbullet app of an Android phone, its notifications can fire the \"Phone notification\" trigger.",
+        "fr": "L'intégration écoute le compte en temps réel. Un push envoyé à l'appareil « Gladys » (depuis le menu Partager de votre téléphone, par exemple) ou à tous vos appareils déclenche le déclencheur de scène « Push reçu ». Avec la recopie des notifications activée dans l'application Pushbullet d'un téléphone Android, ses notifications peuvent déclencher « Notification du téléphone ».",
+        "de": "Die Integration hört das Konto in Echtzeit ab. Ein Push an das Gerät „Gladys“ (zum Beispiel über das Teilen-Menü Ihres Telefons) oder an alle Ihre Geräte löst den Szenen-Auslöser „Push empfangen“ aus. Ist die Benachrichtigungsspiegelung in der Pushbullet-App eines Android-Telefons aktiv, können dessen Benachrichtigungen „Telefon-Benachrichtigung“ auslösen.",
+        "es": "La integración escucha la cuenta en tiempo real. Un push enviado al dispositivo «Gladys» (desde el menú Compartir del teléfono, por ejemplo) o a todos sus dispositivos activa el disparador de escena «Push recibido». Con la duplicación de notificaciones activada en la aplicación Pushbullet de un teléfono Android, sus notificaciones pueden activar «Notificación del teléfono»."
+      }
+    },
+    {
+      "key": "create_device",
+      "type": "boolean",
+      "label": {
+        "en": "Add a \"Gladys\" device to the account",
+        "fr": "Ajouter un appareil « Gladys » au compte",
+        "de": "Gerät „Gladys“ zum Konto hinzufügen",
+        "es": "Añadir un dispositivo «Gladys» a la cuenta"
+      },
+      "description": {
+        "en": "Lets you send a push to Gladys only, and shows where the pushes of Gladys come from. Turning it off does not delete the device: remove it in Pushbullet.",
+        "fr": "Permet d'envoyer un push à Gladys seule, et montre d'où viennent les pushes de Gladys. Le désactiver ne supprime pas l'appareil : retirez-le dans Pushbullet.",
+        "de": "Damit können Sie einen Push nur an Gladys senden, und es zeigt, woher die Pushes von Gladys kommen. Das Ausschalten löscht das Gerät nicht: Entfernen Sie es in Pushbullet.",
+        "es": "Permite enviar un push solo a Gladys y muestra de dónde vienen los pushes de Gladys. Desactivarlo no elimina el dispositivo: quítelo en Pushbullet."
+      },
+      "default": true
+    },
+    {
+      "key": "device_name",
+      "type": "string",
+      "label": {
+        "en": "Name of the device",
+        "fr": "Nom de l'appareil",
+        "de": "Name des Geräts",
+        "es": "Nombre del dispositivo"
+      },
+      "description": {
+        "en": "Used when the device is created. To rename it later, rename it in Pushbullet.",
+        "fr": "Utilisé à la création de l'appareil. Pour le renommer ensuite, renommez-le dans Pushbullet.",
+        "de": "Wird beim Anlegen des Geräts verwendet. Zum späteren Umbenennen benennen Sie es in Pushbullet um.",
+        "es": "Se usa al crear el dispositivo. Para cambiarle el nombre después, hágalo en Pushbullet."
+      },
+      "default": "Gladys"
+    },
+    {
+      "key": "receive_pushes",
+      "type": "boolean",
+      "label": {
+        "en": "Pushes received",
+        "fr": "Pushes reçus",
+        "de": "Empfangene Pushes",
+        "es": "Pushes recibidos"
+      },
+      "description": {
+        "en": "Fires \"Push received\" for each new push on the account, except those of Gladys. Another Pushbullet user can push to your e-mail: filter on the sender before opening a door or disarming an alarm.",
+        "fr": "Déclenche « Push reçu » pour chaque nouveau push sur le compte, sauf ceux de Gladys. Un autre utilisateur de Pushbullet peut pousser vers votre e-mail : filtrez sur l'expéditeur avant d'ouvrir une porte ou de désarmer une alarme.",
+        "de": "Löst „Push empfangen“ für jeden neuen Push auf dem Konto aus, außer denen von Gladys. Ein anderer Pushbullet-Benutzer kann an Ihre E-Mail pushen: Filtern Sie nach dem Absender, bevor Sie eine Tür öffnen oder eine Alarmanlage entschärfen.",
+        "es": "Activa «Push recibido» con cada push nuevo de la cuenta, salvo los de Gladys. Otro usuario de Pushbullet puede enviar pushes a su correo: filtre por el remitente antes de abrir una puerta o desarmar una alarma."
+      },
+      "default": true
+    },
+    {
+      "key": "receive_mirrors",
+      "type": "boolean",
+      "label": {
+        "en": "Mirrored notifications",
+        "fr": "Notifications recopiées",
+        "de": "Gespiegelte Benachrichtigungen",
+        "es": "Notificaciones reflejadas"
+      },
+      "description": {
+        "en": "Fires \"Phone notification\" for each notification an Android phone mirrors to the account (\"Notification mirroring\" in the Pushbullet app). The texts of your notifications then go through the integration.",
+        "fr": "Déclenche « Notification du téléphone » pour chaque notification qu'un téléphone Android recopie sur le compte (« Notification mirroring » dans l'application Pushbullet). Le texte de vos notifications passe alors par l'intégration.",
+        "de": "Löst „Telefon-Benachrichtigung“ für jede Benachrichtigung aus, die ein Android-Telefon auf das Konto spiegelt („Notification mirroring“ in der Pushbullet-App). Die Texte Ihrer Benachrichtigungen laufen dann durch die Integration.",
+        "es": "Activa «Notificación del teléfono» con cada notificación que un teléfono Android refleja en la cuenta («Notification mirroring» en la aplicación Pushbullet). El texto de sus notificaciones pasa entonces por la integración."
+      },
+      "default": false
+    },
+    {
+      "key": "encryption_password",
+      "type": "secret",
+      "label": {
+        "en": "End-to-end encryption password",
+        "fr": "Mot de passe du chiffrement de bout en bout",
+        "de": "Passwort der Ende-zu-Ende-Verschlüsselung",
+        "es": "Contraseña del cifrado de extremo a extremo"
+      },
+      "description": {
+        "en": "Only if you turned on end-to-end encryption in the Pushbullet apps: the same password, to read the mirrored notifications.",
+        "fr": "Seulement si vous avez activé le chiffrement de bout en bout dans les applications Pushbullet : le même mot de passe, pour lire les notifications recopiées.",
+        "de": "Nur wenn Sie die Ende-zu-Ende-Verschlüsselung in den Pushbullet-Apps aktiviert haben: dasselbe Passwort, um die gespiegelten Benachrichtigungen zu lesen.",
+        "es": "Solo si activó el cifrado de extremo a extremo en las aplicaciones de Pushbullet: la misma contraseña, para leer las notificaciones reflejadas."
+      }
+    }
+  ],
+  "contact_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Notifications by Pushbullet",
+        "fr": "Notifications par Pushbullet",
+        "de": "Benachrichtigungen per Pushbullet",
+        "es": "Notificaciones por Pushbullet"
+      },
+      "description": {
+        "en": "Enter the e-mail of your Pushbullet account: your Gladys notifications arrive on its devices. If it is not a Pushbullet account, Pushbullet sends an e-mail instead.",
+        "fr": "Saisissez l'e-mail de votre compte Pushbullet : vos notifications de Gladys arrivent sur ses appareils. Si ce n'est pas un compte Pushbullet, Pushbullet envoie un e-mail à la place.",
+        "de": "Geben Sie die E-Mail Ihres Pushbullet-Kontos ein: Ihre Gladys-Benachrichtigungen kommen auf dessen Geräten an. Ist es kein Pushbullet-Konto, sendet Pushbullet stattdessen eine E-Mail.",
+        "es": "Introduzca el correo de su cuenta de Pushbullet: sus notificaciones de Gladys llegan a sus dispositivos. Si no es una cuenta de Pushbullet, Pushbullet envía un correo en su lugar."
+      }
+    },
+    {
+      "key": "email",
+      "type": "string",
+      "label": {
+        "en": "Pushbullet e-mail",
+        "fr": "E-mail Pushbullet",
+        "de": "Pushbullet-E-Mail",
+        "es": "Correo de Pushbullet"
+      },
+      "placeholder": {
+        "en": "jane@example.com",
+        "fr": "marie@exemple.fr",
+        "de": "anna@beispiel.de",
+        "es": "lucia@ejemplo.es"
+      },
+      "required": true
+    },
+    {
+      "key": "device",
+      "type": "string",
+      "label": {
+        "en": "Device",
+        "fr": "Appareil",
+        "de": "Gerät",
+        "es": "Dispositivo"
+      },
+      "description": {
+        "en": "Optional, and only when your e-mail is the one of the account of the integration: the name of one device, as Pushbullet shows it. Empty: all its devices.",
+        "fr": "Facultatif, et seulement si votre e-mail est celui du compte de l'intégration : le nom d'un appareil, tel que Pushbullet l'affiche. Vide : tous ses appareils.",
+        "de": "Optional und nur, wenn Ihre E-Mail die des Kontos der Integration ist: der Name eines Geräts, wie Pushbullet ihn anzeigt. Leer: alle seine Geräte.",
+        "es": "Opcional, y solo si su correo es el de la cuenta de la integración: el nombre de un dispositivo, tal como lo muestra Pushbullet. Vacío: todos sus dispositivos."
+      },
+      "placeholder": {
+        "en": "Pixel 8",
+        "fr": "Pixel 8",
+        "de": "Pixel 8",
+        "es": "Pixel 8"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "description": {
+        "en": "Reads the account and lists its devices, and the phones able to send texts.",
+        "fr": "Lit le compte et liste ses appareils, et les téléphones capables d'envoyer des SMS.",
+        "de": "Liest das Konto und listet seine Geräte sowie die Telefone auf, die SMS senden können.",
+        "es": "Lee la cuenta y enumera sus dispositivos y los teléfonos que pueden enviar SMS."
+      },
+      "timeout_seconds": 30
+    },
+    {
+      "key": "send_test_push",
+      "label": {
+        "en": "Send a test push",
+        "fr": "Envoyer un push de test",
+        "de": "Test-Push senden",
+        "es": "Enviar un push de prueba"
+      },
+      "description": {
+        "en": "Sends a short push to every device of the account, or to the device below.",
+        "fr": "Envoie un court push à tous les appareils du compte, ou à l'appareil ci-dessous.",
+        "de": "Sendet einen kurzen Push an alle Geräte des Kontos oder an das Gerät unten.",
+        "es": "Envía un push corto a todos los dispositivos de la cuenta o al dispositivo de abajo."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "string",
+          "label": {
+            "en": "Device (optional)",
+            "fr": "Appareil (facultatif)",
+            "de": "Gerät (optional)",
+            "es": "Dispositivo (opcional)"
+          },
+          "placeholder": {
+            "en": "Pixel 8",
+            "fr": "Pixel 8",
+            "de": "Pixel 8",
+            "es": "Pixel 8"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "account",
+      "label": {
+        "en": "Pushbullet",
+        "fr": "Pushbullet",
+        "de": "Pushbullet",
+        "es": "Pushbullet"
+      },
+      "description": {
+        "en": "Pushes sent and received this month, devices, realtime link, last failure, test button.",
+        "fr": "Pushes envoyés et reçus ce mois-ci, appareils, temps réel, dernier échec, bouton de test.",
+        "de": "Gesendete und empfangene Pushes, Geräte, Echtzeit, letzter Fehler, Test-Schaltfläche.",
+        "es": "Pushes enviados y recibidos este mes, dispositivos, tiempo real, último fallo, botón de prueba."
+      },
+      "icon": "bell"
+    },
+    {
+      "key": "recent",
+      "label": {
+        "en": "Pushes received",
+        "fr": "Pushes reçus",
+        "de": "Empfangene Pushes",
+        "es": "Pushes recibidos"
+      },
+      "description": {
+        "en": "The last pushes and phone notifications received; tap one to read it whole.",
+        "fr": "Les derniers pushes et notifications du téléphone reçus ; touchez-en un pour le lire en entier.",
+        "de": "Die letzten empfangenen Pushes und Telefon-Benachrichtigungen; antippen zum Lesen.",
+        "es": "Los últimos pushes y notificaciones del teléfono recibidos; toque uno para leerlo entero."
+      },
+      "icon": "inbox"
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "push_received",
+      "label": {
+        "en": "Push received",
+        "fr": "Push reçu",
+        "de": "Push empfangen",
+        "es": "Push recibido"
+      },
+      "description": {
+        "en": "A note, a link or a file arrived on the Pushbullet account (\"Pushes received\" must be on). Never the pushes of Gladys.",
+        "fr": "Une note, un lien ou un fichier est arrivé sur le compte Pushbullet (« Pushes reçus » doit être activé). Jamais les pushes de Gladys.",
+        "de": "Eine Notiz, ein Link oder eine Datei ist auf dem Pushbullet-Konto angekommen („Empfangene Pushes“ muss an sein). Nie die Pushes von Gladys.",
+        "es": "Ha llegado una nota, un enlace o un archivo a la cuenta de Pushbullet («Pushes recibidos» debe estar activado). Nunca los pushes de Gladys."
+      },
+      "fields": [
+        {
+          "key": "target",
+          "type": "multi_select",
+          "label": {
+            "en": "Sent to",
+            "fr": "Envoyé à",
+            "de": "Gesendet an",
+            "es": "Enviado a"
+          },
+          "description": {
+            "en": "Leave empty for every push.",
+            "fr": "Laissez vide pour tous les pushes.",
+            "de": "Leer lassen für alle Pushes.",
+            "es": "Déjelo vacío para todos los pushes."
+          },
+          "options": [
+            {
+              "value": "gladys",
+              "label": {
+                "en": "The \"Gladys\" device",
+                "fr": "L'appareil « Gladys »",
+                "de": "Das Gerät „Gladys“",
+                "es": "El dispositivo «Gladys»"
+              }
+            },
+            {
+              "value": "all",
+              "label": {
+                "en": "All devices",
+                "fr": "Tous les appareils",
+                "de": "Alle Geräte",
+                "es": "Todos los dispositivos"
+              }
+            },
+            {
+              "value": "other_device",
+              "label": {
+                "en": "Another device",
+                "fr": "Un autre appareil",
+                "de": "Ein anderes Gerät",
+                "es": "Otro dispositivo"
+              }
+            }
+          ]
+        },
+        {
+          "key": "origin",
+          "type": "multi_select",
+          "label": {
+            "en": "From",
+            "fr": "Provenance",
+            "de": "Herkunft",
+            "es": "Procedencia"
+          },
+          "description": {
+            "en": "Leave empty for every push.",
+            "fr": "Laissez vide pour tous les pushes.",
+            "de": "Leer lassen für alle Pushes.",
+            "es": "Déjelo vacío para todos los pushes."
+          },
+          "options": [
+            {
+              "value": "self",
+              "label": {
+                "en": "One of my devices",
+                "fr": "Un de mes appareils",
+                "de": "Eines meiner Geräte",
+                "es": "Uno de mis dispositivos"
+              }
+            },
+            {
+              "value": "person",
+              "label": {
+                "en": "Another person",
+                "fr": "Une autre personne",
+                "de": "Eine andere Person",
+                "es": "Otra persona"
+              }
+            },
+            {
+              "value": "channel",
+              "label": {
+                "en": "A channel",
+                "fr": "Un canal",
+                "de": "Ein Kanal",
+                "es": "Un canal"
+              }
+            }
+          ]
+        },
+        {
+          "key": "keyword",
+          "type": "string",
+          "label": {
+            "en": "First word",
+            "fr": "Premier mot",
+            "de": "Erstes Wort",
+            "es": "Primera palabra"
+          },
+          "description": {
+            "en": "Only pushes whose title (or text, without a title) starts with this word, in capitals without accents (\"Garage open\" gives GARAGE). Empty: every push.",
+            "fr": "Seulement les pushes dont le titre (ou le texte, sans titre) commence par ce mot, en majuscules sans accents (« Garage ouvert » donne GARAGE). Vide : tous les pushes.",
+            "de": "Nur Pushes, deren Titel (oder Text, ohne Titel) mit diesem Wort beginnt, in Großbuchstaben ohne Akzente („Garage offen“ ergibt GARAGE). Leer: alle Pushes.",
+            "es": "Solo los pushes cuyo título (o texto, sin título) empieza por esta palabra, en mayúsculas sin acentos («Garaje abierto» da GARAJE). Vacío: todos los pushes."
+          },
+          "placeholder": {
+            "en": "GARAGE",
+            "fr": "GARAGE",
+            "de": "GARAGE",
+            "es": "GARAJE"
+          }
+        },
+        {
+          "key": "sender_email",
+          "type": "string",
+          "label": {
+            "en": "Sender e-mail",
+            "fr": "E-mail de l'expéditeur",
+            "de": "E-Mail des Absenders",
+            "es": "Correo del remitente"
+          },
+          "description": {
+            "en": "Only pushes from this Pushbullet account, in lower case. Empty: every sender.",
+            "fr": "Seulement les pushes de ce compte Pushbullet, en minuscules. Vide : tous les expéditeurs.",
+            "de": "Nur Pushes von diesem Pushbullet-Konto, in Kleinbuchstaben. Leer: alle Absender.",
+            "es": "Solo los pushes de esta cuenta de Pushbullet, en minúsculas. Vacío: todos los remitentes."
+          },
+          "placeholder": {
+            "en": "jane@example.com",
+            "fr": "marie@exemple.fr",
+            "de": "anna@beispiel.de",
+            "es": "lucia@ejemplo.es"
+          }
+        },
+        {
+          "key": "type",
+          "type": "multi_select",
+          "label": {
+            "en": "Kind",
+            "fr": "Genre",
+            "de": "Art",
+            "es": "Tipo"
+          },
+          "description": {
+            "en": "Leave empty for every push.",
+            "fr": "Laissez vide pour tous les pushes.",
+            "de": "Leer lassen für alle Pushes.",
+            "es": "Déjelo vacío para todos los pushes."
+          },
+          "options": [
+            {
+              "value": "note",
+              "label": {
+                "en": "Note",
+                "fr": "Note",
+                "de": "Notiz",
+                "es": "Nota"
+              }
+            },
+            {
+              "value": "link",
+              "label": {
+                "en": "Link",
+                "fr": "Lien",
+                "de": "Link",
+                "es": "Enlace"
+              }
+            },
+            {
+              "value": "file",
+              "label": {
+                "en": "File",
+                "fr": "Fichier",
+                "de": "Datei",
+                "es": "Archivo"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Title",
+            "fr": "Titre",
+            "de": "Titel",
+            "es": "Título"
+          }
+        },
+        {
+          "key": "body",
+          "type": "string",
+          "label": {
+            "en": "Text",
+            "fr": "Texte",
+            "de": "Text",
+            "es": "Texto"
+          },
+          "description": {
+            "en": "The text of the push (1,000 characters at most).",
+            "fr": "Le texte du push (1 000 caractères au plus).",
+            "de": "Der Text des Pushs (höchstens 1.000 Zeichen).",
+            "es": "El texto del push (1000 caracteres como máximo)."
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "Link",
+            "fr": "Lien",
+            "de": "Link",
+            "es": "Enlace"
+          },
+          "description": {
+            "en": "The link of a link push, or the download address of a file.",
+            "fr": "Le lien d'un push de type lien, ou l'adresse de téléchargement d'un fichier.",
+            "de": "Der Link eines Link-Pushs oder die Download-Adresse einer Datei.",
+            "es": "El enlace de un push de enlace, o la dirección de descarga de un archivo."
+          }
+        },
+        {
+          "key": "file_name",
+          "type": "string",
+          "label": {
+            "en": "File name",
+            "fr": "Nom du fichier",
+            "de": "Dateiname",
+            "es": "Nombre del archivo"
+          }
+        },
+        {
+          "key": "keyword",
+          "type": "string",
+          "label": {
+            "en": "First word",
+            "fr": "Premier mot",
+            "de": "Erstes Wort",
+            "es": "Primera palabra"
+          },
+          "description": {
+            "en": "The first word of the title (or text), in capitals without accents.",
+            "fr": "Le premier mot du titre (ou du texte), en majuscules sans accents.",
+            "de": "Das erste Wort des Titels (oder Texts), in Großbuchstaben ohne Akzente.",
+            "es": "La primera palabra del título (o texto), en mayúsculas sin acentos."
+          }
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "label": {
+            "en": "Kind",
+            "fr": "Genre",
+            "de": "Art",
+            "es": "Tipo"
+          },
+          "description": {
+            "en": "note, link or file.",
+            "fr": "note, link ou file.",
+            "de": "note, link oder file.",
+            "es": "note, link o file."
+          }
+        },
+        {
+          "key": "origin",
+          "type": "string",
+          "label": {
+            "en": "From",
+            "fr": "Provenance",
+            "de": "Herkunft",
+            "es": "Procedencia"
+          },
+          "description": {
+            "en": "self, person or channel.",
+            "fr": "self, person ou channel.",
+            "de": "self, person oder channel.",
+            "es": "self, person o channel."
+          }
+        },
+        {
+          "key": "target",
+          "type": "string",
+          "label": {
+            "en": "Sent to",
+            "fr": "Envoyé à",
+            "de": "Gesendet an",
+            "es": "Enviado a"
+          },
+          "description": {
+            "en": "gladys, all or other_device.",
+            "fr": "gladys, all ou other_device.",
+            "de": "gladys, all oder other_device.",
+            "es": "gladys, all u other_device."
+          }
+        },
+        {
+          "key": "sender_name",
+          "type": "string",
+          "label": {
+            "en": "Sender name",
+            "fr": "Nom de l'expéditeur",
+            "de": "Name des Absenders",
+            "es": "Nombre del remitente"
+          }
+        },
+        {
+          "key": "sender_email",
+          "type": "string",
+          "label": {
+            "en": "Sender e-mail",
+            "fr": "E-mail de l'expéditeur",
+            "de": "E-Mail des Absenders",
+            "es": "Correo del remitente"
+          }
+        },
+        {
+          "key": "source_device",
+          "type": "string",
+          "label": {
+            "en": "Sending device",
+            "fr": "Appareil d'envoi",
+            "de": "Sendendes Gerät",
+            "es": "Dispositivo de envío"
+          },
+          "description": {
+            "en": "The name of the device the push was sent from, when Pushbullet says it.",
+            "fr": "Le nom de l'appareil d'où le push est parti, quand Pushbullet l'indique.",
+            "de": "Der Name des Geräts, von dem der Push kam, wenn Pushbullet ihn angibt.",
+            "es": "El nombre del dispositivo desde el que se envió el push, cuando Pushbullet lo indica."
+          }
+        },
+        {
+          "key": "received_at",
+          "type": "string",
+          "label": {
+            "en": "Sent at",
+            "fr": "Envoyé le",
+            "de": "Gesendet am",
+            "es": "Enviado el"
+          },
+          "description": {
+            "en": "Date and time of the push, ISO 8601 in UTC.",
+            "fr": "Date et heure du push, ISO 8601 en UTC.",
+            "de": "Datum und Uhrzeit des Pushs, ISO 8601 in UTC.",
+            "es": "Fecha y hora del push, ISO 8601 en UTC."
+          }
+        }
+      ]
+    },
+    {
+      "key": "notification_mirrored",
+      "label": {
+        "en": "Phone notification",
+        "fr": "Notification du téléphone",
+        "de": "Telefon-Benachrichtigung",
+        "es": "Notificación del teléfono"
+      },
+      "description": {
+        "en": "An Android phone mirrored one of its notifications to the account (\"Mirrored notifications\" must be on).",
+        "fr": "Un téléphone Android a recopié une de ses notifications sur le compte (« Notifications recopiées » doit être activé).",
+        "de": "Ein Android-Telefon hat eine seiner Benachrichtigungen auf das Konto gespiegelt („Gespiegelte Benachrichtigungen“ muss an sein).",
+        "es": "Un teléfono Android ha reflejado una de sus notificaciones en la cuenta («Notificaciones reflejadas» debe estar activado)."
+      },
+      "fields": [
+        {
+          "key": "application_name",
+          "type": "string",
+          "label": {
+            "en": "Application",
+            "fr": "Application",
+            "de": "App",
+            "es": "Aplicación"
+          },
+          "description": {
+            "en": "Only notifications of this application, written exactly as Android names it (WhatsApp, Gmail…). Empty: every application.",
+            "fr": "Seulement les notifications de cette application, écrite exactement comme Android la nomme (WhatsApp, Gmail…). Vide : toutes les applications.",
+            "de": "Nur Benachrichtigungen dieser App, genau so geschrieben, wie Android sie nennt (WhatsApp, Gmail…). Leer: alle Apps.",
+            "es": "Solo las notificaciones de esta aplicación, escrita exactamente como la llama Android (WhatsApp, Gmail…). Vacío: todas las aplicaciones."
+          },
+          "placeholder": {
+            "en": "WhatsApp",
+            "fr": "WhatsApp",
+            "de": "WhatsApp",
+            "es": "WhatsApp"
+          }
+        },
+        {
+          "key": "source_device",
+          "type": "string",
+          "label": {
+            "en": "Phone",
+            "fr": "Téléphone",
+            "de": "Telefon",
+            "es": "Teléfono"
+          },
+          "description": {
+            "en": "Only notifications of this phone, by its name in Pushbullet. Empty: every phone.",
+            "fr": "Seulement les notifications de ce téléphone, par son nom dans Pushbullet. Vide : tous les téléphones.",
+            "de": "Nur Benachrichtigungen dieses Telefons, nach seinem Namen in Pushbullet. Leer: alle Telefone.",
+            "es": "Solo las notificaciones de este teléfono, por su nombre en Pushbullet. Vacío: todos los teléfonos."
+          },
+          "placeholder": {
+            "en": "Pixel 8",
+            "fr": "Pixel 8",
+            "de": "Pixel 8",
+            "es": "Pixel 8"
+          }
+        },
+        {
+          "key": "keyword",
+          "type": "string",
+          "label": {
+            "en": "First word",
+            "fr": "Premier mot",
+            "de": "Erstes Wort",
+            "es": "Primera palabra"
+          },
+          "description": {
+            "en": "Only notifications whose title starts with this word, in capitals without accents. Empty: every notification.",
+            "fr": "Seulement les notifications dont le titre commence par ce mot, en majuscules sans accents. Vide : toutes les notifications.",
+            "de": "Nur Benachrichtigungen, deren Titel mit diesem Wort beginnt, in Großbuchstaben ohne Akzente. Leer: alle Benachrichtigungen.",
+            "es": "Solo las notificaciones cuyo título empieza por esta palabra, en mayúsculas sin acentos. Vacío: todas las notificaciones."
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "application_name",
+          "type": "string",
+          "label": {
+            "en": "Application",
+            "fr": "Application",
+            "de": "App",
+            "es": "Aplicación"
+          }
+        },
+        {
+          "key": "package_name",
+          "type": "string",
+          "label": {
+            "en": "Package",
+            "fr": "Paquet",
+            "de": "Paket",
+            "es": "Paquete"
+          },
+          "description": {
+            "en": "The Android package of the application, e.g. com.whatsapp.",
+            "fr": "Le paquet Android de l'application, par exemple com.whatsapp.",
+            "de": "Das Android-Paket der App, z. B. com.whatsapp.",
+            "es": "El paquete Android de la aplicación, por ejemplo com.whatsapp."
+          }
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Title",
+            "fr": "Titre",
+            "de": "Titel",
+            "es": "Título"
+          }
+        },
+        {
+          "key": "body",
+          "type": "string",
+          "label": {
+            "en": "Text",
+            "fr": "Texte",
+            "de": "Text",
+            "es": "Texto"
+          }
+        },
+        {
+          "key": "keyword",
+          "type": "string",
+          "label": {
+            "en": "First word",
+            "fr": "Premier mot",
+            "de": "Erstes Wort",
+            "es": "Primera palabra"
+          }
+        },
+        {
+          "key": "source_device",
+          "type": "string",
+          "label": {
+            "en": "Phone",
+            "fr": "Téléphone",
+            "de": "Telefon",
+            "es": "Teléfono"
+          }
+        },
+        {
+          "key": "received_at",
+          "type": "string",
+          "label": {
+            "en": "Received at",
+            "fr": "Reçue le",
+            "de": "Empfangen am",
+            "es": "Recibida el"
+          },
+          "description": {
+            "en": "Date and time of reception, ISO 8601 in UTC.",
+            "fr": "Date et heure de réception, ISO 8601 en UTC.",
+            "de": "Datum und Uhrzeit des Empfangs, ISO 8601 in UTC.",
+            "es": "Fecha y hora de recepción, ISO 8601 en UTC."
+          }
+        }
+      ]
+    },
+    {
+      "key": "push_not_sent",
+      "label": {
+        "en": "Push not sent",
+        "fr": "Push non envoyé",
+        "de": "Push nicht gesendet",
+        "es": "Push no enviado"
+      },
+      "description": {
+        "en": "A Gladys notification could not leave through Pushbullet. Fires on the first failure, then again only after a push went through: a scene that warns you through this same channel cannot loop.",
+        "fr": "Une notification de Gladys n'a pas pu partir par Pushbullet. Se déclenche au premier échec, puis à nouveau seulement après un push réussi : une scène qui vous prévient par ce même canal ne peut pas boucler.",
+        "de": "Eine Gladys-Benachrichtigung konnte nicht über Pushbullet gesendet werden. Löst beim ersten Fehler aus, danach erst wieder nach einem erfolgreichen Push: Eine Szene, die Sie über denselben Kanal warnt, kann keine Schleife bilden.",
+        "es": "Una notificación de Gladys no pudo salir por Pushbullet. Se activa con el primer fallo y de nuevo solo después de un push correcto: una escena que le avisa por este mismo canal no puede entrar en bucle."
+      },
+      "fields": [
+        {
+          "key": "reason",
+          "type": "multi_select",
+          "label": {
+            "en": "Reasons",
+            "fr": "Raisons",
+            "de": "Gründe",
+            "es": "Motivos"
+          },
+          "description": {
+            "en": "Leave empty to react to every reason.",
+            "fr": "Laissez vide pour réagir à toutes les raisons.",
+            "de": "Leer lassen, um auf alle Gründe zu reagieren.",
+            "es": "Déjelo vacío para reaccionar a todos los motivos."
+          },
+          "options": [
+            {
+              "value": "quota_exceeded",
+              "label": {
+                "en": "Monthly push limit reached (free account)",
+                "fr": "Limite mensuelle de pushes atteinte (compte gratuit)",
+                "de": "Monatliches Push-Limit erreicht (Gratiskonto)",
+                "es": "Límite mensual de pushes alcanzado (cuenta gratuita)"
+              }
+            },
+            {
+              "value": "invalid_token",
+              "label": {
+                "en": "Access token refused (mistyped or revoked)",
+                "fr": "Jeton d'accès refusé (mal saisi ou révoqué)",
+                "de": "Zugriffstoken abgelehnt (falsch eingegeben oder widerrufen)",
+                "es": "Token de acceso rechazado (mal escrito o revocado)"
+              }
+            },
+            {
+              "value": "not_configured",
+              "label": {
+                "en": "Access token missing in the configuration",
+                "fr": "Jeton d'accès manquant dans la configuration",
+                "de": "Zugriffstoken fehlt in der Konfiguration",
+                "es": "Falta el token de acceso en la configuración"
+              }
+            },
+            {
+              "value": "invalid_target",
+              "label": {
+                "en": "Unknown e-mail or device",
+                "fr": "E-mail ou appareil inconnu",
+                "de": "Unbekannte E-Mail oder unbekanntes Gerät",
+                "es": "Correo o dispositivo desconocido"
+              }
+            },
+            {
+              "value": "not_found",
+              "label": {
+                "en": "Not found on Pushbullet",
+                "fr": "Introuvable sur Pushbullet",
+                "de": "Bei Pushbullet nicht gefunden",
+                "es": "No encontrado en Pushbullet"
+              }
+            },
+            {
+              "value": "rejected",
+              "label": {
+                "en": "Push refused by Pushbullet",
+                "fr": "Push refusé par Pushbullet",
+                "de": "Push von Pushbullet abgelehnt",
+                "es": "Push rechazado por Pushbullet"
+              }
+            },
+            {
+              "value": "rate_limited",
+              "label": {
+                "en": "Too many calls in a short time",
+                "fr": "Trop d'appels en peu de temps",
+                "de": "Zu viele Aufrufe in kurzer Zeit",
+                "es": "Demasiadas llamadas en poco tiempo"
+              }
+            },
+            {
+              "value": "server_error",
+              "label": {
+                "en": "Pushbullet server error",
+                "fr": "Erreur du serveur Pushbullet",
+                "de": "Serverfehler bei Pushbullet",
+                "es": "Error del servidor de Pushbullet"
+              }
+            },
+            {
+              "value": "timeout",
+              "label": {
+                "en": "No answer in time",
+                "fr": "Pas de réponse à temps",
+                "de": "Keine Antwort rechtzeitig",
+                "es": "Sin respuesta a tiempo"
+              }
+            },
+            {
+              "value": "unreachable",
+              "label": {
+                "en": "Pushbullet unreachable (network)",
+                "fr": "Pushbullet injoignable (réseau)",
+                "de": "Pushbullet nicht erreichbar (Netzwerk)",
+                "es": "Pushbullet inaccesible (red)"
+              }
+            },
+            {
+              "value": "unexpected",
+              "label": {
+                "en": "Unexpected answer",
+                "fr": "Réponse inattendue",
+                "de": "Unerwartete Antwort",
+                "es": "Respuesta inesperada"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "reason",
+          "type": "string",
+          "label": {
+            "en": "Reason (code)",
+            "fr": "Raison (code)",
+            "de": "Grund (Code)",
+            "es": "Motivo (código)"
+          },
+          "description": {
+            "en": "quota_exceeded, invalid_token, not_configured, invalid_target, not_found, rejected, rate_limited, server_error, timeout, unreachable, unexpected.",
+            "fr": "quota_exceeded, invalid_token, not_configured, invalid_target, not_found, rejected, rate_limited, server_error, timeout, unreachable, unexpected.",
+            "de": "quota_exceeded, invalid_token, not_configured, invalid_target, not_found, rejected, rate_limited, server_error, timeout, unreachable, unexpected.",
+            "es": "quota_exceeded, invalid_token, not_configured, invalid_target, not_found, rejected, rate_limited, server_error, timeout, unreachable, unexpected."
+          }
+        },
+        {
+          "key": "status",
+          "type": "number",
+          "label": {
+            "en": "HTTP status",
+            "fr": "Statut HTTP",
+            "de": "HTTP-Status",
+            "es": "Estado HTTP"
+          },
+          "description": {
+            "en": "The answer of Pushbullet (401, 429…), empty without an answer.",
+            "fr": "La réponse de Pushbullet (401, 429…), vide sans réponse.",
+            "de": "Die Antwort von Pushbullet (401, 429…), leer ohne Antwort.",
+            "es": "La respuesta de Pushbullet (401, 429…), vacía sin respuesta."
+          }
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "label": {
+            "en": "Error message",
+            "fr": "Message d'erreur",
+            "de": "Fehlermeldung",
+            "es": "Mensaje de error"
+          },
+          "description": {
+            "en": "The error in English, as in the logs.",
+            "fr": "L'erreur en anglais, comme dans les journaux.",
+            "de": "Der Fehler auf Englisch, wie in den Protokollen.",
+            "es": "El error en inglés, como en los registros."
+          }
+        },
+        {
+          "key": "target",
+          "type": "string",
+          "label": {
+            "en": "Recipient",
+            "fr": "Destinataire",
+            "de": "Empfänger",
+            "es": "Destinatario"
+          },
+          "description": {
+            "en": "The masked e-mail of the user, e.g. j***@example.com.",
+            "fr": "L'e-mail masqué de l'utilisateur, par exemple j***@example.com.",
+            "de": "Die maskierte E-Mail des Benutzers, z. B. j***@example.com.",
+            "es": "El correo oculto del usuario, por ejemplo j***@example.com."
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "send_push",
+      "label": {
+        "en": "Send a Pushbullet push",
+        "fr": "Envoyer un push Pushbullet",
+        "de": "Pushbullet-Push senden",
+        "es": "Enviar un push de Pushbullet"
+      },
+      "description": {
+        "en": "A note, or a link when a link is given, to all the devices of the account, one device, another person or a channel you own.",
+        "fr": "Une note, ou un lien si un lien est donné, à tous les appareils du compte, un appareil, une autre personne ou un canal qui vous appartient.",
+        "de": "Eine Notiz, oder ein Link, wenn einer angegeben ist, an alle Geräte des Kontos, ein Gerät, eine andere Person oder einen eigenen Kanal.",
+        "es": "Una nota, o un enlace si se indica uno, a todos los dispositivos de la cuenta, a un dispositivo, a otra persona o a un canal propio."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Title",
+            "fr": "Titre",
+            "de": "Titel",
+            "es": "Título"
+          },
+          "description": {
+            "en": "Empty: the title of the configuration.",
+            "fr": "Vide : le titre de la configuration.",
+            "de": "Leer: der Titel aus der Konfiguration.",
+            "es": "Vacío: el título de la configuración."
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Text",
+            "fr": "Texte",
+            "de": "Text",
+            "es": "Texto"
+          },
+          "required": true
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "Link",
+            "fr": "Lien",
+            "de": "Link",
+            "es": "Enlace"
+          },
+          "description": {
+            "en": "Optional: makes it a link push that opens this address.",
+            "fr": "Facultatif : en fait un push de type lien qui ouvre cette adresse.",
+            "de": "Optional: macht daraus einen Link-Push, der diese Adresse öffnet.",
+            "es": "Opcional: lo convierte en un push de enlace que abre esta dirección."
+          },
+          "placeholder": {
+            "en": "https://…",
+            "fr": "https://…",
+            "de": "https://…",
+            "es": "https://…"
+          }
+        },
+        {
+          "key": "device",
+          "type": "string",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "One device of the account, by name. Fill one target at most; none: all the devices.",
+            "fr": "Un appareil du compte, par son nom. Remplissez une cible au plus ; aucune : tous les appareils.",
+            "de": "Ein Gerät des Kontos, nach Name. Höchstens ein Ziel ausfüllen; keines: alle Geräte.",
+            "es": "Un dispositivo de la cuenta, por su nombre. Rellene un destino como máximo; ninguno: todos los dispositivos."
+          },
+          "placeholder": {
+            "en": "Pixel 8",
+            "fr": "Pixel 8",
+            "de": "Pixel 8",
+            "es": "Pixel 8"
+          }
+        },
+        {
+          "key": "email",
+          "type": "string",
+          "label": {
+            "en": "E-mail",
+            "fr": "E-mail",
+            "de": "E-Mail",
+            "es": "Correo"
+          },
+          "description": {
+            "en": "Another person: a Pushbullet user gets a push, anyone else an e-mail.",
+            "fr": "Une autre personne : un utilisateur de Pushbullet reçoit un push, les autres un e-mail.",
+            "de": "Eine andere Person: Ein Pushbullet-Benutzer erhält einen Push, alle anderen eine E-Mail.",
+            "es": "Otra persona: un usuario de Pushbullet recibe un push, los demás un correo."
+          },
+          "placeholder": {
+            "en": "jane@example.com",
+            "fr": "marie@exemple.fr",
+            "de": "anna@beispiel.de",
+            "es": "lucia@ejemplo.es"
+          }
+        },
+        {
+          "key": "channel_tag",
+          "type": "string",
+          "label": {
+            "en": "Channel tag",
+            "fr": "Tag du canal",
+            "de": "Kanal-Tag",
+            "es": "Etiqueta del canal"
+          },
+          "description": {
+            "en": "A Pushbullet channel you own: every subscriber gets the push.",
+            "fr": "Un canal Pushbullet qui vous appartient : chaque abonné reçoit le push.",
+            "de": "Ein eigener Pushbullet-Kanal: Jeder Abonnent erhält den Push.",
+            "es": "Un canal de Pushbullet propio: cada suscriptor recibe el push."
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "push_iden",
+          "type": "string",
+          "label": {
+            "en": "Push identifier",
+            "fr": "Identifiant du push",
+            "de": "Push-Kennung",
+            "es": "Identificador del push"
+          }
+        },
+        {
+          "key": "target",
+          "type": "string",
+          "label": {
+            "en": "Target",
+            "fr": "Cible",
+            "de": "Ziel",
+            "es": "Destino"
+          },
+          "description": {
+            "en": "all, the name of the device, the e-mail or #channel.",
+            "fr": "all, le nom de l'appareil, l'e-mail ou #canal.",
+            "de": "all, der Name des Geräts, die E-Mail oder #Kanal.",
+            "es": "all, el nombre del dispositivo, el correo o #canal."
+          }
+        }
+      ]
+    },
+    {
+      "key": "send_sms",
+      "label": {
+        "en": "Send an SMS through Pushbullet",
+        "fr": "Envoyer un SMS via Pushbullet",
+        "de": "SMS über Pushbullet senden",
+        "es": "Enviar un SMS con Pushbullet"
+      },
+      "description": {
+        "en": "Your Android phone sends the SMS, with its own plan, as soon as it syncs (cancelled after one hour). Free accounts have a monthly limit of messages.",
+        "fr": "Votre téléphone Android envoie le SMS, avec son propre forfait, dès qu'il se synchronise (annulé au bout d'une heure). Les comptes gratuits ont une limite mensuelle de messages.",
+        "de": "Ihr Android-Telefon sendet die SMS mit seinem eigenen Tarif, sobald es synchronisiert (nach einer Stunde verworfen). Gratiskonten haben ein monatliches Nachrichtenlimit.",
+        "es": "Su teléfono Android envía el SMS, con su propia tarifa, en cuanto se sincroniza (se cancela pasada una hora). Las cuentas gratuitas tienen un límite mensual de mensajes."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "phone_numbers",
+          "type": "string",
+          "label": {
+            "en": "Phone numbers",
+            "fr": "Numéros de téléphone",
+            "de": "Telefonnummern",
+            "es": "Números de teléfono"
+          },
+          "description": {
+            "en": "One or more, separated by commas (several numbers make a group MMS).",
+            "fr": "Un ou plusieurs, séparés par des virgules (plusieurs numéros font un MMS de groupe).",
+            "de": "Eine oder mehrere, durch Kommas getrennt (mehrere Nummern ergeben eine Gruppen-MMS).",
+            "es": "Uno o varios, separados por comas (varios números forman un MMS de grupo)."
+          },
+          "placeholder": {
+            "en": "+33612345678",
+            "fr": "+33612345678",
+            "de": "+491701234567",
+            "es": "+34612345678"
+          },
+          "required": true
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Text",
+            "fr": "Texte",
+            "de": "Text",
+            "es": "Texto"
+          },
+          "required": true
+        },
+        {
+          "key": "device",
+          "type": "string",
+          "label": {
+            "en": "Phone",
+            "fr": "Téléphone",
+            "de": "Telefon",
+            "es": "Teléfono"
+          },
+          "description": {
+            "en": "Its name in Pushbullet. Empty: the first phone able to send texts.",
+            "fr": "Son nom dans Pushbullet. Vide : le premier téléphone capable d'envoyer des SMS.",
+            "de": "Sein Name in Pushbullet. Leer: das erste Telefon, das SMS senden kann.",
+            "es": "Su nombre en Pushbullet. Vacío: el primer teléfono que pueda enviar SMS."
+          },
+          "placeholder": {
+            "en": "Pixel 8",
+            "fr": "Pixel 8",
+            "de": "Pixel 8",
+            "es": "Pixel 8"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "text_iden",
+          "type": "string",
+          "label": {
+            "en": "SMS identifier",
+            "fr": "Identifiant du SMS",
+            "de": "SMS-Kennung",
+            "es": "Identificador del SMS"
+          }
+        },
+        {
+          "key": "device",
+          "type": "string",
+          "label": {
+            "en": "Phone",
+            "fr": "Téléphone",
+            "de": "Telefon",
+            "es": "Teléfono"
+          },
+          "description": {
+            "en": "The phone that sends the SMS.",
+            "fr": "Le téléphone qui envoie le SMS.",
+            "de": "Das Telefon, das die SMS sendet.",
+            "es": "El teléfono que envía el SMS."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "gladys-pushbullet",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "External Gladys Assistant integration that sends Gladys notifications through Pushbullet, with scene triggers on pushes and phone notifications, scene actions and dashboard widgets.",
   "homepage": "https://github.com/William-De71/gladys-pushbullet",

@@ -81,11 +81,13 @@ function assertDeclared(event) {
 }
 
 /**
- * @description Let the stream handlers (not awaited) run.
+ * @description Let the stream handlers (not awaited) run. 20 ms was not
+ * enough on a busy CI runner: the fake Pushbullet answers over HTTP, and a
+ * test asserting that nothing fires needs the same margin.
  * @returns {Promise<void>}
  */
-const settle = () => new Promise((resolve) => setTimeout(resolve, 20));
-// For work slower than one settle() on a busy CI runner (key derivation).
+const settle = () => new Promise((resolve) => setTimeout(resolve, 100));
+// For work that can outlast even one settle() (key derivation).
 const settleUntil = async (condition, timeoutMs = 2000) => {
   const deadline = Date.now() + timeoutMs;
   while (!condition() && Date.now() < deadline) await settle();

@@ -5,7 +5,7 @@
 [![Licencia: Apache-2.0](https://img.shields.io/badge/licencia-Apache--2.0-blue.svg)](LICENSE)
 [![Última versión](https://img.shields.io/github/v/release/William-De71/gladys-pushbullet?sort=semver)](https://github.com/William-De71/gladys-pushbullet/releases)
 [![CI](https://img.shields.io/github/actions/workflow/status/William-De71/gladys-pushbullet/release.yml?branch=main&label=CI)](https://github.com/William-De71/gladys-pushbullet/actions/workflows/release.yml)
-[![Gladys](https://img.shields.io/badge/Gladys-%E2%89%A5%205.1.0-2f6fb5)](https://gladysassistant.com)
+[![Gladys](https://img.shields.io/badge/Gladys-%E2%89%A5%205.3.0-2f6fb5)](https://gladysassistant.com)
 
 ![Pushbullet para Gladys Assistant](cover.jpg)
 
@@ -100,7 +100,7 @@ Ejemplos: _push que empieza por GARAJE en el dispositivo «Gladys» desde uno de
 
 ## Requisitos previos
 
-- Gladys Assistant 5.1.0 o posterior (widgets y escenas); las instancias más antiguas no pueden instalar la integración.
+- Gladys Assistant 5.3.0 o posterior (widgets y escenas, el catálogo de palabras clave/países de Gladys 5.3); las instancias más antiguas no pueden instalar la integración.
 - Una cuenta de Pushbullet y sus aplicaciones en sus dispositivos; opcionalmente un teléfono Android para los SMS y las notificaciones reflejadas.
 
 ## Instalación

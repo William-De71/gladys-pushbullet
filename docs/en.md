@@ -25,7 +25,7 @@ when turned on, the mirrored notifications go through the Pushbullet servers
 
 ## Prerequisites
 
-- Gladys Assistant **5.1.0** or later.
+- Gladys Assistant **5.3.0** or later.
 - A Pushbullet account and the Pushbullet app on the devices that should get
   the notifications (Android, iPhone, Windows, browser extensions).
 - A free account sends **500 pushes per month**, every app and service

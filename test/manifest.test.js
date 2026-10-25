@@ -38,8 +38,8 @@ test('declares the cloud transport only: the Pushbullet API and stream', () => {
   assert.doesNotMatch(source('../src/app.js'), /publishTransports|GLADYS_PREFER_LOCAL/);
 });
 
-test('requires the first Gladys accepting widgets and scenes; no extra permission', () => {
-  assert.equal(manifest.gladys_version, '>=5.1.0');
+test('requires Gladys 5.3.0 (catalog keywords); no extra permission', () => {
+  assert.equal(manifest.gladys_version, '>=5.3.0');
   assert.deepEqual(manifest.categories, ['notifications']);
   for (const key of ['location', 'network_wake', 'containers', 'network_discovery', 'webhooks']) {
     assert.equal(manifest[key], undefined, key);
@@ -144,4 +144,17 @@ test('limits of the store: counts, timeouts, sizes', () => {
   const cover = readFileSync(new URL('../cover.jpg', import.meta.url));
   assert.ok(cover.length < 150 * 1024, `cover.jpg: ${cover.length} bytes`);
   assert.equal(cover.readUInt16BE(0), 0xffd8, 'cover.jpg is a JPEG');
+});
+
+test('catalog search terms of Gladys 5.3.0: keywords within bounds, countries', () => {
+  assert.ok(Array.isArray(manifest.keywords));
+  assert.ok(manifest.keywords.length >= 1 && manifest.keywords.length <= 10);
+  const normalized = manifest.keywords.map((keyword) => keyword.trim().toLowerCase());
+  for (const keyword of normalized) {
+    assert.ok(keyword.length >= 2 && keyword.length <= 30, keyword);
+  }
+  assert.equal(new Set(normalized).size, normalized.length, 'keywords must be unique');
+  assert.ok(!normalized.includes(manifest.name.toLowerCase()), 'the name is already searched');
+  // Usable worldwide: no `countries` restriction.
+  assert.equal(manifest.countries, undefined);
 });

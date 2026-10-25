@@ -25,7 +25,7 @@ Pushbullet (`api.pushbullet.com`, `stream.pushbullet.com`).
 
 ## Prérequis
 
-- Gladys Assistant **5.1.0** ou plus récent.
+- Gladys Assistant **5.3.0** ou plus récent.
 - Un compte Pushbullet et l'application Pushbullet sur les appareils qui
   doivent recevoir les notifications (Android, iPhone, Windows, extensions de
   navigateur).

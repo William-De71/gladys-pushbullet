@@ -10,8 +10,17 @@
   },
   "version": "0.1.1",
   "docker_image": "ghcr.io/william-de71/gladys-pushbullet:0.1.1",
-  "gladys_version": ">=5.1.0",
+  "gladys_version": ">=5.3.0",
   "categories": ["notifications"],
+  "keywords": [
+    "push",
+    "notification",
+    "Android",
+    "SMS",
+    "mirroring",
+    "notification push",
+    "phone notifications"
+  ],
   "transports": ["cloud"],
   "cover_image": "https://raw.githubusercontent.com/William-De71/gladys-pushbullet/main/cover.jpg",
   "messaging": {

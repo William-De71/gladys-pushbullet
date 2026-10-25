@@ -85,6 +85,11 @@ function assertDeclared(event) {
  * @returns {Promise<void>}
  */
 const settle = () => new Promise((resolve) => setTimeout(resolve, 20));
+// For work slower than one settle() on a busy CI runner (key derivation).
+const settleUntil = async (condition, timeoutMs = 2000) => {
+  const deadline = Date.now() + timeoutMs;
+  while (!condition() && Date.now() < deadline) await settle();
+};
 
 test('connects: reads the account, creates the "Gladys" device once, opens the stream', async () => {
   const { gladys, pb, ws, app, statePath } = await start();
@@ -367,6 +372,7 @@ test('notification_mirrored: plain and end-to-end encrypted, off by default', as
   // Dismissals and clipboard are ignored.
   socket.receive({ type: 'push', push: { type: 'dismissal', notification_id: '-8' } });
   socket.receive({ type: 'push', push: { type: 'clip', body: 'copied' } });
+  await settleUntil(() => gladys.fake.sceneEvents.length >= 2);
   await settle();
   assert.equal(gladys.fake.sceneEvents.length, 2);
   for (const event of gladys.fake.sceneEvents) {
